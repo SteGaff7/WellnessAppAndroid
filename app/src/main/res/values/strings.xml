@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Load Manager</string>
+    <string name="wellness_activity_button">Wellness</string>
+    <string name="test_start">Started successfully</string>
 </resources>
