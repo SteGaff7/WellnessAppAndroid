@@ -14,12 +14,24 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         Button wellnessActButton = findViewById(R.id.wellnessActButton);
 
         wellnessActButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), WellnessActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
+        Button apiTestingActivity = findViewById(R.id.apiTestingActivity);
+
+        apiTestingActivity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), APITestingActivity.class);
                 startActivity(intent);
             }
         });

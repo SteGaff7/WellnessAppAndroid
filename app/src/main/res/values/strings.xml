@@ -1,5 +1,19 @@
 <resources>
     <string name="app_name">Load Manager</string>
     <string name="wellness_activity_button">Wellness</string>
+    <string name="api_testing_activity_button">API Testing</string>
+    <string name="api_test">API info</string>
     <string name="test_start">Started successfully</string>
+    <string name="score_1">V Poor</string>
+    <string name="score_2">Poor</string>
+    <string name="score_3">Average</string>
+    <string name="score_4">Good</string>
+    <string name="score_5">V Good</string>
+    <string name="sleep">Sleep</string>
+    <string name="energy">Energy</string>
+    <string name="soreness">Soreness</string>
+    <string name="mood">Mood</string>
+    <string name="stress">Stress</string>
+    <string name="submit">Submit</string>
+    <string name="wellness">Rate your wellness below and submit</string>
 </resources>
