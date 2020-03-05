@@ -6,86 +6,9 @@
     android:layout_height="match_parent"
     tools:context=".WellnessActivity">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="@string/wellness"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <LinearLayout
-        android:id="@+id/linearLayout2"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginRight="24dp"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/textView16"
-                android:layout_width="match_parent"
-                android:layout_height="40dp" />
-
-            <TextView
-                android:id="@+id/textView17"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp"
-                android:text="@string/sleep"
-                android:textAlignment="center" />
-
-            <TextView
-                android:id="@+id/textView18"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp"
-                android:text="@string/energy"
-                android:textAlignment="center" />
-
-            <TextView
-                android:id="@+id/textView19"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp"
-                android:text="@string/soreness"
-                android:textAlignment="center" />
-
-            <TextView
-                android:id="@+id/textView20"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp"
-                android:text="@string/mood"
-                android:textAlignment="center" />
-
-            <TextView
-                android:id="@+id/textView21"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp"
-                android:text="@string/stress"
-                android:textAlignment="center" />
-        </LinearLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -93,264 +16,371 @@
             android:gravity="center"
             android:orientation="vertical">
 
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="@string/wellness" />
+
+            <TextView
+                android:id="@+id/userIDTextHeading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="User ID" />
+
+            <EditText
+                android:id="@+id/userIDInput"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:inputType="number" />
+
+            <TextView
+                android:id="@+id/dateHeading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Date (yyyy-mm-dd):" />
+
+            <EditText
+                android:id="@+id/dateInput"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:inputType="date" />
+
             <LinearLayout
+                android:id="@+id/linearLayout2"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:gravity="center"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginRight="24dp"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/textView22"
-                    android:layout_width="match_parent"
+                <LinearLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="0.2"
-                    android:text="@string/score_1"
-                    android:textAlignment="center" />
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/textView23"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.2"
-                    android:text="@string/score_2"
-                    android:textAlignment="center" />
+                    <TextView
+                        android:id="@+id/textView16"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp" />
 
-                <TextView
-                    android:id="@+id/textView24"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.2"
-                    android:text="@string/score_3"
-                    android:textAlignment="center" />
+                    <TextView
+                        android:id="@+id/textView17"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:paddingLeft="4dp"
+                        android:paddingRight="4dp"
+                        android:text="@string/sleep"
+                        android:textAlignment="center" />
 
-                <TextView
-                    android:id="@+id/textView25"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.2"
-                    android:text="@string/score_4"
-                    android:textAlignment="center" />
+                    <TextView
+                        android:id="@+id/textView18"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:paddingLeft="4dp"
+                        android:paddingRight="4dp"
+                        android:text="@string/energy"
+                        android:textAlignment="center" />
 
-                <TextView
-                    android:id="@+id/textView26"
+                    <TextView
+                        android:id="@+id/textView19"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:paddingLeft="4dp"
+                        android:paddingRight="4dp"
+                        android:text="@string/soreness"
+                        android:textAlignment="center" />
+
+                    <TextView
+                        android:id="@+id/textView20"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:paddingLeft="4dp"
+                        android:paddingRight="4dp"
+                        android:text="@string/mood"
+                        android:textAlignment="center" />
+
+                    <TextView
+                        android:id="@+id/textView21"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:paddingLeft="4dp"
+                        android:paddingRight="4dp"
+                        android:text="@string/stress"
+                        android:textAlignment="center" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.2"
-                    android:text="@string/score_5"
-                    android:textAlignment="center" />
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textView22"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="0.2"
+                            android:text="@string/score_1"
+                            android:textAlignment="center" />
+
+                        <TextView
+                            android:id="@+id/textView23"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.2"
+                            android:text="@string/score_2"
+                            android:textAlignment="center" />
+
+                        <TextView
+                            android:id="@+id/textView24"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.2"
+                            android:text="@string/score_3"
+                            android:textAlignment="center" />
+
+                        <TextView
+                            android:id="@+id/textView25"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.2"
+                            android:text="@string/score_4"
+                            android:textAlignment="center" />
+
+                        <TextView
+                            android:id="@+id/textView26"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.2"
+                            android:text="@string/score_5"
+                            android:textAlignment="center" />
+                    </LinearLayout>
+
+                    <RadioGroup
+                        android:id="@+id/sleepRadioGroup"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:orientation="horizontal">
+
+                        <RadioButton
+                            android:id="@+id/sleep0"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.2" />
+
+                        <RadioButton
+                            android:id="@+id/sleep1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.2" />
+
+                        <RadioButton
+                            android:id="@+id/sleep2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.2" />
+
+                        <RadioButton
+                            android:id="@+id/sleep3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.2" />
+
+                        <RadioButton
+                            android:id="@+id/sleep4"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.2" />
+                    </RadioGroup>
+
+                    <RadioGroup
+                        android:id="@+id/energyRadioGroup"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:orientation="horizontal">
+
+                        <RadioButton
+                            android:id="@+id/energy0"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.2" />
+
+                        <RadioButton
+                            android:id="@+id/energy1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.2" />
+
+                        <RadioButton
+                            android:id="@+id/energy2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.2"
+                            android:checked="false" />
+
+                        <RadioButton
+                            android:id="@+id/energy3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.2" />
+
+                        <RadioButton
+                            android:id="@+id/energy4"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.2" />
+                    </RadioGroup>
+
+                    <RadioGroup
+                        android:id="@+id/sorenessRadioGroup"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:orientation="horizontal">
+
+                        <RadioButton
+                            android:id="@+id/soreness0"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.2" />
+
+                        <RadioButton
+                            android:id="@+id/soreness1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.2" />
+
+                        <RadioButton
+                            android:id="@+id/soreness2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.2"
+                            android:checked="false" />
+
+                        <RadioButton
+                            android:id="@+id/soreness3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.2" />
+
+                        <RadioButton
+                            android:id="@+id/soreness4"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.2" />
+                    </RadioGroup>
+
+                    <RadioGroup
+                        android:id="@+id/moodRadioGroup"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:orientation="horizontal">
+
+                        <RadioButton
+                            android:id="@+id/mood0"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.2" />
+
+                        <RadioButton
+                            android:id="@+id/mood1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.2" />
+
+                        <RadioButton
+                            android:id="@+id/mood2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.2"
+                            android:checked="false" />
+
+                        <RadioButton
+                            android:id="@+id/mood3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.2" />
+
+                        <RadioButton
+                            android:id="@+id/mood4"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.2" />
+                    </RadioGroup>
+
+                    <RadioGroup
+                        android:id="@+id/stressRadioGroup"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:orientation="horizontal">
+
+                        <RadioButton
+                            android:id="@+id/stress0"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.2" />
+
+                        <RadioButton
+                            android:id="@+id/stress1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.2" />
+
+                        <RadioButton
+                            android:id="@+id/stress2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.2"
+                            android:checked="false" />
+
+                        <RadioButton
+                            android:id="@+id/stress3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.2" />
+
+                        <RadioButton
+                            android:id="@+id/stress4"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.2" />
+                    </RadioGroup>
+
+                </LinearLayout>
+
             </LinearLayout>
 
-            <RadioGroup
-                android:id="@+id/sleepRadioGroup"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:orientation="horizontal">
+            <Button
+                android:id="@+id/wellnessSubmitButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="@string/submit" />
 
-                <RadioButton
-                    android:id="@+id/sleep0"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.2" />
-
-                <RadioButton
-                    android:id="@+id/sleep1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.2" />
-
-                <RadioButton
-                    android:id="@+id/sleep2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.2" />
-
-                <RadioButton
-                    android:id="@+id/sleep3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.2" />
-
-                <RadioButton
-                    android:id="@+id/sleep4"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.2" />
-            </RadioGroup>
-
-            <RadioGroup
-                android:id="@+id/energyRadioGroup"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:orientation="horizontal">
-
-                <RadioButton
-                    android:id="@+id/energy0"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.2" />
-
-                <RadioButton
-                    android:id="@+id/energy1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.2" />
-
-                <RadioButton
-                    android:id="@+id/energy2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.2"
-                    android:checked="false" />
-
-                <RadioButton
-                    android:id="@+id/energy3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.2" />
-
-                <RadioButton
-                    android:id="@+id/energy4"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.2" />
-            </RadioGroup>
-
-            <RadioGroup
-                android:id="@+id/sorenessRadioGroup"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:orientation="horizontal">
-
-                <RadioButton
-                    android:id="@+id/soreness0"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.2" />
-
-                <RadioButton
-                    android:id="@+id/soreness1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.2" />
-
-                <RadioButton
-                    android:id="@+id/soreness2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.2"
-                    android:checked="false" />
-
-                <RadioButton
-                    android:id="@+id/soreness3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.2" />
-
-                <RadioButton
-                    android:id="@+id/soreness4"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.2" />
-            </RadioGroup>
-
-            <RadioGroup
-                android:id="@+id/moodRadioGroup"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:orientation="horizontal">
-
-                <RadioButton
-                    android:id="@+id/mood0"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.2" />
-
-                <RadioButton
-                    android:id="@+id/mood1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.2" />
-
-                <RadioButton
-                    android:id="@+id/mood2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.2"
-                    android:checked="false" />
-
-                <RadioButton
-                    android:id="@+id/mood3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.2" />
-
-                <RadioButton
-                    android:id="@+id/mood4"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.2" />
-            </RadioGroup>
-
-            <RadioGroup
-                android:id="@+id/stressRadioGroup"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:orientation="horizontal">
-
-                <RadioButton
-                    android:id="@+id/stress0"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.2" />
-
-                <RadioButton
-                    android:id="@+id/stress1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.2" />
-
-                <RadioButton
-                    android:id="@+id/stress2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.2"
-                    android:checked="false" />
-
-                <RadioButton
-                    android:id="@+id/stress3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.2" />
-
-                <RadioButton
-                    android:id="@+id/stress4"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.2" />
-            </RadioGroup>
+            <TextView
+                android:id="@+id/wellnessTest"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp" />
 
         </LinearLayout>
-
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/wellnessSubmitButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="128dp"
-        android:text="@string/submit"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
-
-    <TextView
-        android:id="@+id/wellnessTest"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/wellnessSubmitButton" />
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

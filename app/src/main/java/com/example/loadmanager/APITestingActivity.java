@@ -76,6 +76,15 @@ public class APITestingActivity extends AppCompatActivity {
             }
         });
 
+        Button buttonPOSTObjCorrect = findViewById(R.id.buttonPOSTObjCorrect);
+
+        buttonPOSTObjCorrect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                POSTObjCorrectVolleyTask();
+            }
+        });
+
 //      Post Object Test
         Button POSTObjButton = findViewById(R.id.buttonPOSTObj);
 
@@ -189,6 +198,46 @@ public class APITestingActivity extends AppCompatActivity {
         });
 
         queue.add(request);
+    }
+
+    private void POSTObjCorrectVolleyTask() {
+
+        JSONObject jsonObj = new JSONObject();
+
+        try {
+            jsonObj.put("user", 77);
+            jsonObj.put("date", "2000-03-05");
+            jsonObj.put("sleep_score", 1);
+            jsonObj.put("energy_score", 2);
+            jsonObj.put("soreness_score", 3);
+            jsonObj.put("mood_score", 1);
+            jsonObj.put("stress_score", 3);
+            jsonObj.put("total_score", 10);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+
+        String url = "http://192.168.0.53:8000/wellness/";
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST,
+                url,
+                jsonObj,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        textViewAPITestResults.setText("Response:" + response.toString());
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i(TAG,"Error :" + error.toString());
+                textViewAPITestResults.setText("Response:" + error.toString());
+            }
+        });
+
+        requestQueue.add(request);
     }
 
     private void POSTObjVolleyTask() {
