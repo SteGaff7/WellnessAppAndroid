@@ -129,6 +129,7 @@ public class WellnessActivity extends AppCompatActivity {
             jsonObj.put("mood_score", scores[3]);
             jsonObj.put("stress_score", scores[4]);
             jsonObj.put("total_score", total_score);
+            jsonObj.put("comments", null);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -144,14 +145,18 @@ public class WellnessActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         wellnessTest.setText("Response: " + response.toString());
+                        Toast.makeText(WellnessActivity.this, "This is a response message", Toast.LENGTH_SHORT).show();
                     }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i(TAG,"Error :" + error.toString());
-                wellnessTest.setText("Response: " + error.toString());
-            }
-        });
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.i(TAG,"Error :" + error.toString());
+                        wellnessTest.setText("Response: " + error.toString());
+                        Toast.makeText(WellnessActivity.this, "This is an error message", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
 
         requestQueue.add(request);
     }

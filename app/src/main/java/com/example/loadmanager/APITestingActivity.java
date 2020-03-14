@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -30,6 +31,8 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -92,6 +95,35 @@ public class APITestingActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 POSTObjVolleyTask();
+            }
+        });
+
+        Button userButton = findViewById(R.id.userButton);
+
+        userButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                userPostTask();
+            }
+        });
+
+//      Serialization test
+        Button buttonSerializationTest = findViewById(R.id.buttonSerializationTest);
+
+        buttonSerializationTest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                serializationTest();
+            }
+        });
+
+//        Login Test
+        Button LoginButton = findViewById(R.id.buttonLoginTest);
+
+        LoginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LoginVolleyTask();
             }
         });
 
@@ -281,6 +313,153 @@ public class APITestingActivity extends AppCompatActivity {
 //
 //            return params;
 //    }
+
+        requestQueue.add(request);
+    }
+
+    private void userPostTask() {
+        String url = "http://192.168.0.53:8000/user_api/";
+
+        JSONObject jsonObj = new JSONObject();
+        JSONObject innerObj = new JSONObject();
+        try {
+            innerObj.put("username", "test2");
+            innerObj.put("email", "test2@test.com");
+            innerObj.put("password", "testpassword");
+            jsonObj.put("owner", innerObj);
+            jsonObj.put("text", "this is text");
+//            jsonObj.put("text", "this is the text");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+
+//        jsonRequest is object to be sent, only used with POST
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST,
+                url,
+                jsonObj,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        textViewAPITestResults.setText("Sent" + response.toString());
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i(TAG,"Error :" + error.toString());
+            }
+        });
+
+        requestQueue.add(request);
+    }
+
+    private void serializationTest() {
+        String url = "http://192.168.0.53:8000/serialization/";
+
+        JSONObject simpleObj = new JSONObject();
+        JSONObject commentObj = new JSONObject();
+        JSONObject userObj = new JSONObject();
+
+        try {
+//            commentObj.put("content", "new content");
+//            simpleObj.put("my_id", 6);
+//            simpleObj.put("text", "text work");
+//            simpleObj.put("comment", commentObj);
+            simpleObj.put("username", "test");
+            simpleObj.put("text", "another is text");
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+
+//        jsonRequest is object to be sent, only used with POST
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST,
+                url,
+                simpleObj,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        textViewAPITestResults.setText("Sent" + response.toString());
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i(TAG,"Error :" + error.toString());
+            }
+        });
+
+        requestQueue.add(request);
+    }
+
+    private void LoginVolleyTask() {
+        String url = "http://192.168.0.53:8000/api-token-auth/";
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+
+        JSONObject simpleObj = new JSONObject();
+
+        try {
+            simpleObj.put("username", "test");
+            simpleObj.put("password", "klopi111");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST,
+                url,
+                simpleObj,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        String token = null;
+                        try {
+                            token = (String) response.get("token");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        requestWithToken(token);
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.i(TAG,"Error :" + error.toString());
+                    }
+        });
+        requestQueue.add(request);
+    }
+
+    private void requestWithToken(final String token) {
+        String url = "http://192.168.0.53:8000/check_auth/";
+
+        final RequestQueue requestQueue = Volley.newRequestQueue(this);
+//        GET request for this view
+
+        final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,
+                url,
+                null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        textViewAPITestResults.setText("Response" + response.toString());
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i(TAG,"Error :" + error.toString());
+            }
+        }) {
+//          Overwrite the headers
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json");
+                headers.put("Authorization", "Token " + token);
+                return headers;
+            }
+        };
 
         requestQueue.add(request);
     }
