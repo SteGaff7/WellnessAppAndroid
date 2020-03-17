@@ -2,6 +2,7 @@ package com.example.loadmanager;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -51,13 +52,26 @@ public class APITestingActivity extends AppCompatActivity {
 
     private static TextView textViewAPITestResults;
     private static final String TAG = APITestingActivity.class.getName();
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_apitesting);
 
+        sharedPreferences = getSharedPreferences("UserPref", 0);
+
         textViewAPITestResults = findViewById(R.id.textViewAPITestResults);
+
+//      Shared preferences test
+        Button prefTestButton = findViewById(R.id.prefTestButton);
+
+        prefTestButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getSharedPref();
+            }
+        });
 
 //      Get Specific User Test
         Button GETUserButton = findViewById(R.id.buttonGETUser);
@@ -161,6 +175,13 @@ public class APITestingActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void getSharedPref() {
+        String user = sharedPreferences.getString("user", null);
+        String token = sharedPreferences.getString("token", null);
+
+        textViewAPITestResults.setText("User: " + user + "\nToken: " + token);
     }
 
 

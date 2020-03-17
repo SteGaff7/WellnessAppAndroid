@@ -21,6 +21,12 @@
             android:gravity="center"
             android:orientation="vertical">
 
+            <Button
+                android:id="@+id/prefTestButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Shared pref test" />
+
             <TextView
                 android:id="@+id/textView2"
                 android:layout_width="wrap_content"
