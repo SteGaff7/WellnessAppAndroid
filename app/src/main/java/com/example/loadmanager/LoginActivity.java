@@ -103,7 +103,12 @@ public class LoginActivity extends AppCompatActivity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        String token = null;
                         try {
+//                             Save like the login in stuff
+                            System.out.println("**************" + response.toString());
+                            token = (String) response.get("token");
+                            System.out.println("**************" + token);
                             System.out.println("**************" + mStatusCode);
                         } catch (Exception e) {
                             e.printStackTrace();
