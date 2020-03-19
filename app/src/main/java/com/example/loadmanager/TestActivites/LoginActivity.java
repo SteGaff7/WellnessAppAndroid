@@ -1,4 +1,4 @@
-package com.example.loadmanager;
+package com.example.loadmanager.TestActivites;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -17,6 +17,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.loadmanager.R;
+import com.example.loadmanager.TestActivites.APITestingActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -117,6 +119,8 @@ public class LoginActivity extends AppCompatActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+//                Parse volley error: https://stackoverflow.com/questions/35841118/how-to-get-error-message-description-using-volley
+//                parseVolleyError(error);
 
                 if (error.networkResponse != null) {
                     String statusCode = String.valueOf(error.networkResponse.statusCode);
@@ -125,6 +129,7 @@ public class LoginActivity extends AppCompatActivity {
                         System.out.println("Status code:" + statusCode);
                     }
                     displayError(statusCode);
+                    System.out.println(error.networkResponse.data.toString());
                 }
                 Log.i(TAG,"Error :" + error.toString());
             }
@@ -139,6 +144,19 @@ public class LoginActivity extends AppCompatActivity {
                 ;
         requestQueue.add(request);
     }
+//
+//    public void parseVolleyError(VolleyError error) {
+//        try {
+//            String responseBody = new String(error.networkResponse.data, "utf-8");
+//            JSONObject data = new JSONObject(responseBody);
+//            JSONArray errors = data.getJSONArray("errors");
+//            JSONObject jsonMessage = errors.getJSONObject(0);
+//            String message = jsonMessage.getString("message");
+//            System.out.println("Error: " + message);
+//        } catch (JSONException | UnsupportedEncodingException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
 
     private void login() {
@@ -218,7 +236,7 @@ public class LoginActivity extends AppCompatActivity {
         editor.putString("user", username);
         editor.putBoolean("keepLoggedIn", true);
         editor.putString("token", token);
-        editor.commit();
+        editor.apply();
 //        Redirect & kill activity
         finish();
     }

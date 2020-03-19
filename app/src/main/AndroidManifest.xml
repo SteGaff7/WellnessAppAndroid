@@ -11,19 +11,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".LoginActivity"></activity>
+        <activity android:name=".UserRegisterActivity"></activity>
+        <activity android:name=".UserLoginActivity" />
+        <activity android:name=".HomeActivity" />
         <activity
-            android:name=".ui.login.LoginActivity"
-            android:label="@string/title_activity_login" />
-        <activity android:name=".APITestingActivity" />
-        <activity android:name=".WellnessActivity" />
-        <activity android:name=".MainActivity">
+            android:name=".EntryActivity"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".TestActivites.LoginActivity" />
+        <activity android:name=".TestActivites.APITestingActivity" />
+        <activity android:name=".WellnessActivity" />
+        <activity android:name=".TestActivites.MainActivity2" />
     </application>
 
 </manifest>

@@ -1,13 +1,16 @@
-package com.example.loadmanager;
-
-import androidx.appcompat.app.AppCompatActivity;
+package com.example.loadmanager.TestActivites;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-public class MainActivity extends AppCompatActivity {
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.loadmanager.R;
+import com.example.loadmanager.WellnessActivity;
+
+public class MainActivity2 extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
