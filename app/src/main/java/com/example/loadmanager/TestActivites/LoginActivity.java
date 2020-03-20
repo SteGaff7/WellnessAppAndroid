@@ -39,7 +39,7 @@ public class LoginActivity extends AppCompatActivity {
     String password;
 
     private int mStatusCode;
-    private static final String TAG = APITestingActivity.class.getName();
+    private static final String TAG = LoginActivity.class.getName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,6 +122,7 @@ public class LoginActivity extends AppCompatActivity {
 //                Parse volley error: https://stackoverflow.com/questions/35841118/how-to-get-error-message-description-using-volley
 //                parseVolleyError(error);
 
+
                 if (error.networkResponse != null) {
                     String statusCode = String.valueOf(error.networkResponse.statusCode);
                     if (statusCode.equals("400")) {
@@ -132,6 +133,7 @@ public class LoginActivity extends AppCompatActivity {
                     System.out.println(error.networkResponse.data.toString());
                 }
                 Log.i(TAG,"Error :" + error.toString());
+
             }
         })
         {
