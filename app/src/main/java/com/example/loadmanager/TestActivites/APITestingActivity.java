@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -71,6 +72,15 @@ public class APITestingActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 getSharedPref();
+            }
+        });
+
+//      Check Auth
+        Button checkAuthButton = findViewById(R.id.checkAuthButton);
+        checkAuthButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                checkAuthentication();
             }
         });
 
@@ -178,11 +188,53 @@ public class APITestingActivity extends AppCompatActivity {
         });
     }
 
+    private void checkAuthentication() {
+        String url = "http://192.168.0.53:8000/check_auth/";
+
+        final String token = sharedPreferences.getString("token", null);
+        System.out.println("******************************" + token);
+
+        final RequestQueue requestQueue = Volley.newRequestQueue(this);
+//        GET request for this view
+        if (token != null) {
+            final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,
+                    url,
+                    null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            textViewAPITestResults.setText("Response" + response.toString());
+                            Toast.makeText(getApplicationContext(), "Authenticated", Toast.LENGTH_LONG).show();
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.i(TAG, "Error :" + error.toString());
+                    Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
+                }
+            }) {
+                //          Overwrite the headers
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    HashMap<String, String> headers = new HashMap<String, String>();
+//                    headers.put("Content-Type", "application/json");
+                    headers.put("Authorization", "Token " + token);
+                    return headers;
+                }
+            };
+
+            requestQueue.add(request);
+        } else {
+            Toast.makeText(getApplicationContext(), "Token Null", Toast.LENGTH_LONG).show();
+        }
+    }
+
     private void getSharedPref() {
         String user = sharedPreferences.getString("user", null);
         String token = sharedPreferences.getString("token", null);
+        String email = sharedPreferences.getString("email", null);
 
-        textViewAPITestResults.setText("User: " + user + "\nToken: " + token);
+        textViewAPITestResults.setText("User: " + user + "\nToken: " + token + "\nEmail: " + email);
     }
 
 

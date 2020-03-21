@@ -89,7 +89,7 @@ public class UserLoginActivity extends AppCompatActivity {
 
     private void loginVolleyTask(final String username, final String password) {
 //         Change url to match new view
-        String url = "http://192.168.0.53:8000/api-token-auth/";
+        String url = "http://192.168.0.53:8000/users/api-token-auth/";
 //        Obtain other info too such as email etc?
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         JSONObject requestObj = new JSONObject();
@@ -132,7 +132,6 @@ public class UserLoginActivity extends AppCompatActivity {
 //                     Tidy up this
                     String statusCode = String.valueOf(error.networkResponse.statusCode);
                     Log.i(TAG, "Error :" + error.toString());
-//                Call function
                     displayError(statusCode);
                 }
             })
