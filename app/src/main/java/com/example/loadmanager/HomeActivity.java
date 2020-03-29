@@ -10,11 +10,17 @@ import android.widget.Button;
 
 import com.example.loadmanager.TestActivites.MainActivity2;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
 public class HomeActivity extends AppCompatActivity {
 
     Button wellnessButton;
     Button oldMainButton;
     Button logoutButton;
+    Button wellnessEntriesListActivityButton;
 
     SharedPreferences sharedPreferences;
 
@@ -24,6 +30,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         wellnessButton = findViewById(R.id.wellnessActivityButton);
+        wellnessEntriesListActivityButton = findViewById(R.id.wellnessEntriesListActivityButton);
         oldMainButton = findViewById(R.id.oldMainActivity);
         logoutButton = findViewById(R.id.logoutButton);
 
@@ -31,7 +38,14 @@ public class HomeActivity extends AppCompatActivity {
         wellnessButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), WellnessActivity.class);
+                checkLastWellnessEntry();
+            }
+        });
+
+        wellnessEntriesListActivityButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), WellnessEntriesListActivity.class);
                 startActivity(intent);
             }
         });
@@ -60,5 +74,24 @@ public class HomeActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    private void checkLastWellnessEntry() {
+        Intent intent;
+
+        Date current = Calendar.getInstance().getTime();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        final String formattedDateToday = df.format(current);
+
+        sharedPreferences = getSharedPreferences("UserPref", 0);
+        String lastWellnessEntry = sharedPreferences.getString("lastWellnessEntry", null);
+
+        if (lastWellnessEntry == null || ! lastWellnessEntry.equals(formattedDateToday)) {
+            intent = new Intent(getApplicationContext(), WellnessActivity.class);
+        } else {
+//          Redirect to add entry redirect activity
+            intent = new Intent(getApplicationContext(), AddEntryRedirectActivity.class);
+        }
+        startActivity(intent);
     }
 }

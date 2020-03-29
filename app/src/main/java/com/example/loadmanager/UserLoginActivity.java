@@ -89,7 +89,7 @@ public class UserLoginActivity extends AppCompatActivity {
 
     private void loginVolleyTask(final String username, final String password) {
 //         Change url to match new view
-        String url = "http://192.168.0.53:8000/users/api-token-auth/";
+        String url = "http://192.168.0.53:8000/users/api-login-token-auth/";
 //        Obtain other info too such as email etc?
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         JSONObject requestObj = new JSONObject();
@@ -112,13 +112,19 @@ public class UserLoginActivity extends AppCompatActivity {
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
-//                            System.out.println("**************" + response.toString());
+//                          Add parse response method here to clean the data
+//                          Get other useful data and save
                             String token;
+                            String date_last_wellness;
                             try {
                                 token = (String) response.get("token");
-//                                System.out.println("**************" + token + " " + mStatusCode);
-                                if (saveUserDetails(token, username)) {
-//                              redirect here?
+//                              Get last wellness entry from server
+                                try {
+                                    date_last_wellness = (String) response.get("date");
+                                } catch (ClassCastException e) {
+                                    date_last_wellness = null;
+                                }
+                                if (saveUserDetails(token, username, date_last_wellness)) {
                                     redirectHome();
                                 }
                             } catch (JSONException e) {
@@ -169,7 +175,7 @@ public class UserLoginActivity extends AppCompatActivity {
         passwordLoginEditText.setText("");
     }
 
-    private boolean saveUserDetails(String token, String username) {
+    private boolean saveUserDetails(String token, String username, String date_last_wellness) {
 
         try {
             SharedPreferences sharedPreferences = getSharedPreferences("UserPref", 0);
@@ -182,6 +188,7 @@ public class UserLoginActivity extends AppCompatActivity {
             editor.putString("user", username);
             editor.putBoolean("keepLoggedIn", true);
             editor.putString("token", token);
+            editor.putString("lastWellnessEntry", date_last_wellness);
             editor.apply();
             return true;
         } catch (Exception e) {

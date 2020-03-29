@@ -17,9 +17,15 @@ public class EntryActivity extends AppCompatActivity {
 
         sharedPreferences = getSharedPreferences("UserPref", 0);
         SharedPreferences.Editor editor = sharedPreferences.edit();
+
+//        Setup sharedPrefs if not found
         Intent intent;
 
 //        editor.putBoolean("keepLoggedIn", true);
+//        editor.apply();
+
+//        Force refresh for testing
+//        editor.putString("lastWellnessEntry", null);
 //        editor.apply();
 
         if (sharedPreferences.contains("user") &&

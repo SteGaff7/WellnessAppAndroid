@@ -90,7 +90,7 @@ public class UserRegisterActivity extends AppCompatActivity {
 
     private void registerUserVolleyTask(final String username, final String email, final String password) {
 //        Change to match new views
-        String url = "http://192.168.0.53:8000/register/";
+        String url = "http://192.168.0.53:8000/users/register/";
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         JSONObject requestObj = new JSONObject();
 
@@ -180,6 +180,7 @@ public class UserRegisterActivity extends AppCompatActivity {
             editor.putString("email", email);
             editor.putBoolean("keepLoggedIn", true);
             editor.putString("token", token);
+            editor.putString("lastWellnessEntry", null);
             editor.apply();
             return true;
         } catch (Exception e) {

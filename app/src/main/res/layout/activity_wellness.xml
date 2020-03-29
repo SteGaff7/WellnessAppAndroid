@@ -23,36 +23,6 @@
                 android:layout_marginTop="32dp"
                 android:text="@string/wellness" />
 
-            <TextView
-                android:id="@+id/userIDTextHeading"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="User ID" />
-
-            <EditText
-                android:id="@+id/userIDInput"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:ems="10"
-                android:inputType="number" />
-
-            <TextView
-                android:id="@+id/dateHeading"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Date (yyyy-mm-dd):" />
-
-            <EditText
-                android:id="@+id/dateInput"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:ems="10"
-                android:inputType="date" />
-
             <LinearLayout
                 android:id="@+id/linearLayout2"
                 android:layout_width="match_parent"
@@ -367,18 +337,21 @@
 
             </LinearLayout>
 
+            <EditText
+                android:id="@+id/commentEditText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:ems="10"
+                android:gravity="start|top"
+                android:inputType="textMultiLine" />
+
             <Button
                 android:id="@+id/wellnessSubmitButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
                 android:text="@string/submit" />
-
-            <TextView
-                android:id="@+id/wellnessTest"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp" />
 
         </LinearLayout>
     </ScrollView>

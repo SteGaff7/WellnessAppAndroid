@@ -33,6 +33,14 @@
                 android:textSize="24sp" />
 
             <Button
+                android:id="@+id/wellnessEntriesListActivityButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="64dp"
+                android:text="wellness entries"
+                android:textSize="24sp" />
+
+            <Button
                 android:id="@+id/oldMainActivity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -47,6 +55,7 @@
                 android:layout_marginTop="64dp"
                 android:text="@string/logout"
                 android:textSize="24sp" />
+
         </LinearLayout>
     </ScrollView>
 

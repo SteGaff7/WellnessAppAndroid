@@ -11,7 +11,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".UserRegisterActivity"></activity>
+        <activity android:name=".WellnessEntriesListActivity"></activity>
+        <activity android:name=".AddEntryRedirectActivity" />
+        <activity android:name=".EntrySummaryActivity" />
+        <activity android:name=".UserRegisterActivity" />
         <activity android:name=".UserLoginActivity" />
         <activity android:name=".HomeActivity" />
         <activity
