@@ -26,7 +26,7 @@ public class EntryActivity extends AppCompatActivity {
 
 //        Force refresh for testing
 //        editor.putString("lastWellnessEntry", null);
-//        editor.apply();
+        editor.apply();
 
         if (sharedPreferences.contains("user") &&
                 sharedPreferences.getBoolean("keepLoggedIn", false)) {
