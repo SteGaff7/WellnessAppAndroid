@@ -89,7 +89,7 @@ public class UserLoginActivity extends AppCompatActivity {
 
     private void loginVolleyTask(final String username, final String password) {
 //         Change url to match new view
-        String url = "http://192.168.0.53:8000/users/api-login-token-auth/";
+        String url = "http://192.168.0.165:8000/users/api-login-token-auth/";
 //        Obtain other info too such as email etc?
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         JSONObject requestObj = new JSONObject();

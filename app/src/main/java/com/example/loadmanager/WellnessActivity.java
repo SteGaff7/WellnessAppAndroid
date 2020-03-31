@@ -146,7 +146,7 @@ public class WellnessActivity extends AppCompatActivity {
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
 
-        String url = "http://192.168.0.53:8000/wellness/";
+        String url = "http://192.168.0.165:8000/wellness/";
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST,
                 url,
                 jsonObj,
