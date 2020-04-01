@@ -13,13 +13,18 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import static com.example.loadmanager.R.color.lightGreen;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
+//    Could use JSONObject here instead of List?
     private List<HashMap> mData;
     private LayoutInflater mInflater;
 //    private ItemClickListener mCLickListener;
@@ -41,6 +46,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 //    Binds data to each view within each row
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+
+//        Use String[] instead of map in time
         HashMap map = mData.get(position);
         String date = (String) map.get("date");
         String sleep = (String) map.get("sleep");
@@ -49,10 +56,25 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         String mood = (String) map.get("mood");
         String stress = (String) map.get("stress");
         String total = (String) map.get("total");
-        String color = (String) map.get("colour");
+        String color = (String) map.get("color");
 
+        String dateFormatted = "";
 
-        holder.dateTextView.setText(date);
+//        First row
+        if (position == 0) {
+            dateFormatted = date;
+        } else {
+            SimpleDateFormat inputDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            try {
+                Date parsedDate = inputDateFormat.parse(date);
+                SimpleDateFormat outputDateFormat = new SimpleDateFormat("d MMM yyyy", Locale.getDefault());
+                dateFormatted = outputDateFormat.format(parsedDate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+        holder.dateTextView.setText(dateFormatted);
         holder.sleepTextView.setText(sleep);
         holder.energyTextView.setText(energy);
         holder.sorenessTextView.setText(soreness);
