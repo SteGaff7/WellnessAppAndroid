@@ -1,4 +1,4 @@
-package com.example.loadmanager;
+package com.example.loadmanager.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.loadmanager.R;
 import com.example.loadmanager.TestActivites.MainActivity2;
 
 import java.text.SimpleDateFormat;
