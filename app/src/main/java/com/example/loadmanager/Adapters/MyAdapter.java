@@ -1,6 +1,7 @@
 package com.example.loadmanager.Adapters;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.loadmanager.R;
@@ -19,6 +21,7 @@ import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -26,12 +29,12 @@ import java.util.Locale;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
-    private JSONArray mData;
+    private ArrayList<JSONObject> mData;
     private LayoutInflater mInflater;
 //    private ItemClickListener mCLickListener;
 
 //    Pass data to constructor and give context
-    public MyAdapter(Context context, JSONArray data) {
+    public MyAdapter(Context context, ArrayList<JSONObject> data) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
     }
@@ -47,41 +50,53 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 //    Binds data to each view within each row
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        Resources resources = holder.itemView.getContext().getResources();
+
         JSONObject entry;
         String date, sleep, energy, soreness, mood, stress, total, comments, dateFormatted;
         date = sleep = energy = soreness = mood = stress = total = comments = dateFormatted = "";
 
-        String white = Integer.toString(Color.parseColor("#00c117"));
-        int intColor = Integer.parseInt(white);
+        int intColor = ResourcesCompat.getColor(resources, R.color.white, null);
 
-        try {
-//            Get relative wellness entry JSON Object
-            entry = (JSONObject) mData.get(position);
+//      Get relative wellness entry JSON Object
+        entry = mData.get(position);
 
+        if (position == 0) {
+//          Header row
+            try {
+                sleep = (String) entry.get("sleep_score");
+                energy = (String) entry.get("energy_score");
+                soreness = (String) entry.get("soreness_score");
+                mood = (String) entry.get("mood_score");
+                stress = (String) entry.get("stress_score");
+                total = (String) entry.get("total_score");
+                dateFormatted = "Date";
+            } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+        } else {
+            try {
 //            Get values
-            date = (String) entry.get("date");
-            sleep = Integer.toString((Integer) entry.get("sleep_score"));
-            energy = Integer.toString((Integer) entry.get("energy_score"));
-            soreness = Integer.toString((Integer) entry.get("soreness_score"));
-            mood = Integer.toString((Integer) entry.get("mood_score"));
-            stress = Integer.toString((Integer) entry.get("stress_score"));
-            total = Integer.toString((Integer) entry.get("total_score"));
+                date = (String) entry.get("date");
+                sleep = Integer.toString((Integer) entry.get("sleep_score"));
+                energy = Integer.toString((Integer) entry.get("energy_score"));
+                soreness = Integer.toString((Integer) entry.get("soreness_score"));
+                mood = Integer.toString((Integer) entry.get("mood_score"));
+                stress = Integer.toString((Integer) entry.get("stress_score"));
+                total = Integer.toString((Integer) entry.get("total_score"));
 
 //            Get comments if any
-            try {
-                if (entry.has("comments")) {
-                    comments = (String) entry.get("comments");
+                try {
+                    if (entry.has("comments")) {
+                        comments = (String) entry.get("comments");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            } catch (Exception e) {
-                System.out.println("**************************HERE");
-            }
 
-//            Format date
-//          First row
-//            Check date logic below?
-            if (position == 0) {
-                dateFormatted = "Date";
-            } else {
+//              Format date
+//              Check date logic below?
+
                 SimpleDateFormat inputDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
                 try {
                     Date parsedDate = inputDateFormat.parse(date);
@@ -90,35 +105,25 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
+
+//                Parse total score from string
+                int totalInt = Integer.parseInt(total);
+
+                if (totalInt < 10) {
+                    intColor = ResourcesCompat.getColor(resources, R.color.red, null);
+                } else if (totalInt < 15) {
+                    intColor = ResourcesCompat.getColor(resources, R.color.orange, null);
+                } else if (totalInt < 20) {
+                    intColor = ResourcesCompat.getColor(resources, R.color.yellow, null);
+                } else {
+                    intColor = ResourcesCompat.getColor(resources, R.color.lightGreen, null);
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-
-//            Get color integer value
-            String red = Integer.toString(Color.parseColor("#CD0000"));
-            String orange = Integer.toString(Color.parseColor("#ff9a1c"));
-            String yellow = Integer.toString(Color.parseColor("#f3f43d"));
-            String green = Integer.toString(Color.parseColor("#00c117"));
-
-
-            int totalInt = Integer.parseInt(total);
-            String colorIntStr;
-
-            if (totalInt < 10) {
-                colorIntStr = red;
-            } else if (totalInt < 15) {
-                colorIntStr = orange;
-            } else if (totalInt < 20) {
-                colorIntStr = yellow;
-            } else {
-                colorIntStr = green;
-            }
-            intColor = Integer.parseInt(colorIntStr);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
 
-        System.out.println(date+ sleep+ energy+ soreness+ mood+ stress+ total+ comments+ dateFormatted);
-        //            Maybe move out a layer?
         holder.dateTextView.setText(dateFormatted);
         holder.sleepTextView.setText(sleep);
         holder.energyTextView.setText(energy);
@@ -126,15 +131,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         holder.moodTextView.setText(mood);
         holder.stressTextView.setText(stress);
         holder.totalTextView.setText(total);
-
         holder.wellnessEntry.setBackgroundColor(intColor);
-
     }
 
-//    Total number of rows
     @Override
     public int getItemCount() {
-        return mData.length();
+        return mData.size();
     }
 
 
