@@ -1,4 +1,4 @@
-package com.example.loadmanager;
+package com.example.loadmanager.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -8,22 +8,31 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.NetworkResponse;
+import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.loadmanager.Adapters.MyAdapter;
+import com.example.loadmanager.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,23 +41,22 @@ public class WellnessEntriesListActivity extends AppCompatActivity {
 
     private static final String TAG = WellnessEntriesListActivity.class.getName();
 
-    private MyAdapter adapter;
     RecyclerView recyclerView;
     TextView wellnessEntryErrorTextView;
-    private ArrayList<HashMap> data = new ArrayList<>();
-
+    private MyAdapter mAdapter;
+    private ArrayList<JSONObject> data = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wellness_entries_list);
 
-//        Initialize adapter with no dataset
-        adapter = new MyAdapter(getApplicationContext(), data);
+//        Initialize adapter with no data set
+        mAdapter = new MyAdapter(getApplicationContext(), data);
 
         recyclerView = findViewById(R.id.myRecycleView);
 //        Set empty adapter
-        recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(mAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
         wellnessEntryErrorTextView = findViewById(R.id.wellnessEntryErrorTextView);
@@ -75,25 +83,17 @@ public class WellnessEntriesListActivity extends AppCompatActivity {
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET,
                 uri.toString(),
                 null,
+//                Listeners are carried out on UI thread
+//                Parsing/data processing should be carries out on background thread e.g parse network
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
                         Toast.makeText(WellnessEntriesListActivity.this, "This is a response message", Toast.LENGTH_SHORT).show();
-//                        Parse and fill recycler view
-//                        recyclerViewDisplay();
-//                        Check response code?
-                        try {
-                            data.clear();
-                            parseResponse(response);
-//                            data = parseResponse(response);
-
-                            adapter.notifyDataSetChanged();
-                        } catch (JSONException e) {
-//                            Handle exception better?
-                            Log.i(TAG,"Error :" + e.toString());
-                        }
+//                        Notify on main thread
+                        mAdapter.notifyDataSetChanged();;
                     }
-                },
+                }
+                ,
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
@@ -102,8 +102,11 @@ public class WellnessEntriesListActivity extends AppCompatActivity {
 //                        Parse error and display text view and button
                         displayTextView();
                     }
-                }) {
-            //          Overwrite the headers
+                }
+
+                )
+        {
+//          Overwrite the headers
             @Override
             public Map<String, String> getHeaders() {
                 HashMap<String, String> headers = new HashMap<String, String>();
@@ -111,89 +114,67 @@ public class WellnessEntriesListActivity extends AppCompatActivity {
                 headers.put("Authorization", "Token " + token);
                 return headers;
             }
+
+//          Overwrite parse network response, this returns a response object to onResponse
+            @Override
+            protected Response<JSONArray> parseNetworkResponse (NetworkResponse response){
+//                This thread is on background thread
+//                Handle parsing logic here?
+                try {
+                    String jsonString =
+                            new String(
+                                    response.data,
+                                    HttpHeaderParser.parseCharset(response.headers, PROTOCOL_CHARSET));
+                    JSONArray jsonArray = new JSONArray(jsonString);
+
+//                  Parse on background thread
+                    parseResponse(jsonArray);
+
+//                    Start a thread on main thread (Not needed)
+
+//                    WellnessEntriesListActivity.this.runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            mAdapter.notifyDataSetChanged();
+//                        }
+//                    });
+
+                    return Response.success(jsonArray, HttpHeaderParser.parseCacheHeaders(response));
+                } catch (UnsupportedEncodingException | JSONException e) {
+                    return Response.error(new ParseError(e));
+                }
+            }
+
         };
         requestQueue.add(request);
     }
 
     /**
-     * Function that parses volley response object and returns an ArrayList of HashMaps
+     * Function that parses volley response object and updates adapter data
      * @param response
      */
     private boolean parseResponse(JSONArray response) throws JSONException {
-
         JSONObject entry;
-        HashMap<String, String> innerMap;
 
-//        Change HashMap to array in time
-//        String[] stringEntry;
+//      Clear data set
+        data.clear();
 
-        String white = Integer.toString(Color.parseColor("#ffffff"));
+//      Add header row
+        entry = new JSONObject();
+        entry.put("date", "Date");
+        entry.put("sleep_score", "Sleep");
+        entry.put("energy_score", "Energy");
+        entry.put("soreness_score", "Soreness");
+        entry.put("mood_score", "Mood");
+        entry.put("stress_score", "Stress");
+        entry.put("total_score", "Total");
+        entry.put("comments", null);
 
-        innerMap = new HashMap<>();
-//        Hardcode first row - Replace with header row in time?
+        data.add(entry);
 
-        innerMap.put("date", "Date");
-        innerMap.put("sleep", "Sleep");
-        innerMap.put("energy", "Energy");
-        innerMap.put("soreness", "Soreness");
-        innerMap.put("mood", "Mood");
-        innerMap.put("stress", "Stress");
-        innerMap.put("total", "Total");
-        innerMap.put("comments", null);
-        innerMap.put("color", white);
-        data.add(0, innerMap);
-
-        for (int i=0; i< response.length(); i++) {
+        for (int i=0; i < response.length(); i++) {
             entry = (JSONObject) response.get(i);
-
-            String date = (String) entry.get("date");
-            String sleep = Integer.toString((Integer) entry.get("sleep_score"));
-            String energy = Integer.toString((Integer) entry.get("energy_score"));
-            String soreness = Integer.toString((Integer) entry.get("soreness_score"));
-            String mood = Integer.toString((Integer) entry.get("mood_score"));
-            String stress = Integer.toString((Integer) entry.get("stress_score"));
-            String total = Integer.toString((Integer) entry.get("total_score"));
-            String comments;
-            try {
-                comments = (String) entry.get("comments");
-            } catch (ClassCastException e) {
-                comments = null;
-            }
-
-            innerMap = new HashMap<>();
-
-            innerMap.put("date", date);
-            innerMap.put("sleep", sleep);
-            innerMap.put("energy", energy);
-            innerMap.put("soreness", soreness);
-            innerMap.put("mood", mood);
-            innerMap.put("stress", stress);
-            innerMap.put("total", total);
-            innerMap.put("comments", comments);
-
-
-
-            String red = Integer.toString(Color.parseColor("#CD0000"));
-            String orange = Integer.toString(Color.parseColor("#ff9a1c"));
-            String yellow = Integer.toString(Color.parseColor("#f3f43d"));
-            String green = Integer.toString(Color.parseColor("#00c117"));
-
-
-            int totalInt = Integer.parseInt(total);
-            String colorIntStr;
-
-            if (totalInt < 10) {
-                colorIntStr = red;
-            } else if (totalInt < 15) {
-                colorIntStr = orange;
-            } else if (totalInt < 20) {
-                colorIntStr = yellow;
-            } else {
-                colorIntStr = green;
-            }
-
-            innerMap.put("color", colorIntStr);
-            data.add(i+1, innerMap);
+            data.add(entry);
         }
         return true;
     }

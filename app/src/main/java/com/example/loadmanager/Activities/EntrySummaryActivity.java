@@ -1,4 +1,4 @@
-package com.example.loadmanager;
+package com.example.loadmanager.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.example.loadmanager.R;
 
 public class EntrySummaryActivity extends AppCompatActivity {
 

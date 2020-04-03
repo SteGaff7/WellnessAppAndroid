@@ -1,4 +1,4 @@
-package com.example.loadmanager;
+package com.example.loadmanager.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 

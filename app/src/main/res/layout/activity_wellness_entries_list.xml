@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".WellnessEntriesListActivity">
+    tools:context=".Activities.WellnessEntriesListActivity">
 
     <ScrollView
         android:layout_width="0dp"
@@ -44,7 +44,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                tools:listitem="@layout/wellness_entry_recycler_item" >
+                tools:listitem="@layout/adapter_wellness_entry" >
 
             </androidx.recyclerview.widget.RecyclerView>
 

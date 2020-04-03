@@ -8,7 +8,7 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.loadmanager.R;
-import com.example.loadmanager.WellnessActivity;
+import com.example.loadmanager.Activities.WellnessActivity;
 
 public class MainActivity2 extends AppCompatActivity {
 
