@@ -8,11 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.loadmanager.Activities.WellnessEntriesListActivity;
 import com.example.loadmanager.R;
 
 import org.json.JSONArray;
@@ -132,6 +134,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         holder.stressTextView.setText(stress);
         holder.totalTextView.setText(total);
         holder.wellnessEntry.setBackgroundColor(intColor);
+
     }
 
     @Override
@@ -165,9 +168,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             itemView.setOnClickListener(this);
         }
 
+//        Might need to implement differently for editing
         @Override
         public void onClick(View view) {
-            ;
+//            if (mCLickListener != null) mCLickListener.onItemClick(view, getAdapterPosition());
+            int pos = getLayoutPosition();
+            Toast.makeText(view.getContext(), "Position" + pos, Toast.LENGTH_SHORT).show();
         }
-    }
+}
+
 }

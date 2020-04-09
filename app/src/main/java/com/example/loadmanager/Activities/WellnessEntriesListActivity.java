@@ -26,6 +26,14 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.loadmanager.Adapters.MyAdapter;
 import com.example.loadmanager.R;
+import com.github.mikephil.charting.charts.BarLineChartBase;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,8 +41,14 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class WellnessEntriesListActivity extends AppCompatActivity {
@@ -43,16 +57,62 @@ public class WellnessEntriesListActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
     TextView wellnessEntryErrorTextView;
+    LineChart chart;
     private MyAdapter mAdapter;
-    private ArrayList<JSONObject> data = new ArrayList<>();
+    private ArrayList<JSONObject> mAdapterData = new ArrayList<>();
+//    private ArrayList<String> dateList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wellness_entries_list);
 
+//        chart = findViewById(R.id.lineChart);
+//
+//        List<Entry> entries = new ArrayList<Entry>();
+//        for (int i=0; i<7; i++) {
+//            entries.add(new Entry(i, 7-i));
+//        }
+//
+//        dateList.add("01-01-2000");
+//        dateList.add("02-01-2000");
+//        dateList.add("03-01-2000");
+//        dateList.add("04-01-2000");
+//        dateList.add("05-01-2000");
+//        dateList.add("06-01-2000");
+//        dateList.add("07-01-2000");
+//
+//
+//        YAxis yAxisRight = chart.getAxisRight();
+//        yAxisRight.setPosition(null);
+//
+//
+//        ValueFormatter xAxisFormatter = new DayAxisValueFormatter(chart);
+//        XAxis xAxis = chart.getXAxis();
+//        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+//        xAxis.setDrawGridLines(false);
+//        xAxis.setGranularity(1f); // only intervals of 1 day
+//        xAxis.setLabelCount(7);
+//        xAxis.setValueFormatter(xAxisFormatter);
+//
+//
+//        LineDataSet dataSet = new LineDataSet(entries, "Weekly score");
+////        dataSet.setColor();
+//
+//
+//        LineData lineData = new LineData(dataSet);
+//        chart.setData(lineData);
+//        chart.setDescription(null);
+////        Refresh chart
+//        chart.invalidate();
+
+
+
+
+
+
 //        Initialize adapter with no data set
-        mAdapter = new MyAdapter(getApplicationContext(), data);
+        mAdapter = new MyAdapter(getApplicationContext(), mAdapterData);
 
         recyclerView = findViewById(R.id.myRecycleView);
 //        Set empty adapter
@@ -63,6 +123,19 @@ public class WellnessEntriesListActivity extends AppCompatActivity {
 
         getWellnessEntriesVolleyTask();
     }
+
+//    public class DayAxisValueFormatter extends ValueFormatter {
+//        private final BarLineChartBase<?> chart;
+//        public DayAxisValueFormatter(BarLineChartBase<?> chart) {
+//            this.chart = chart;
+//        }
+//        @Override
+//        public String getFormattedValue(float value) {
+//            return dateList.get((int) value);
+//        }
+//    }
+
+
 
     private void getWellnessEntriesVolleyTask() {
 
@@ -154,29 +227,148 @@ public class WellnessEntriesListActivity extends AppCompatActivity {
      * @param response
      */
     private boolean parseResponse(JSONArray response) throws JSONException {
-        JSONObject entry;
 
-//      Clear data set
-        data.clear();
+//      Chart data
+        ArrayList<String> dateList = new ArrayList<String>(response.length());
+        List<Entry> chartEntries = new ArrayList<Entry>(response.length());
+
+//      Clear adapter data set
+        mAdapterData.clear();
+
+        JSONObject wellnessEntry;
 
 //      Add header row
-        entry = new JSONObject();
-        entry.put("date", "Date");
-        entry.put("sleep_score", "Sleep");
-        entry.put("energy_score", "Energy");
-        entry.put("soreness_score", "Soreness");
-        entry.put("mood_score", "Mood");
-        entry.put("stress_score", "Stress");
-        entry.put("total_score", "Total");
-        entry.put("comments", null);
+        wellnessEntry = new JSONObject();
+        wellnessEntry.put("date", "Date");
+        wellnessEntry.put("sleep_score", "Sleep");
+        wellnessEntry.put("energy_score", "Energy");
+        wellnessEntry.put("soreness_score", "Soreness");
+        wellnessEntry.put("mood_score", "Mood");
+        wellnessEntry.put("stress_score", "Stress");
+        wellnessEntry.put("total_score", "Total");
+        wellnessEntry.put("comments", null);
 
-        data.add(entry);
+        mAdapterData.add(wellnessEntry);
+
 
         for (int i=0; i < response.length(); i++) {
-            entry = (JSONObject) response.get(i);
-            data.add(entry);
+            wellnessEntry = (JSONObject) response.get(i);
+            mAdapterData.add(wellnessEntry);
+
+//          Add to chart data
+            String dateStr = (String) wellnessEntry.get("date");
+            String formattedDate = formatDate(dateStr);
+
+            float total_score = (float) wellnessEntry.getInt("total_score");
+
+            dateList.add(formattedDate);
+            chartEntries.add(new Entry((float) i, total_score));
         }
+
+        for (String s : dateList) {
+            System.out.println(s);
+        }
+
+        for (Entry s : chartEntries) {
+            System.out.println(s.getX() + " - " + s.getY());
+        }
+
+        generateChart(chartEntries, dateList);
         return true;
+    }
+
+    private String formatDate(String dateStr) {
+
+        SimpleDateFormat inputDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        String dateFormatted;
+        try {
+            Date parsedDate = inputDateFormat.parse(dateStr);
+            SimpleDateFormat outputDateFormat = new SimpleDateFormat("E", Locale.getDefault());
+            dateFormatted = outputDateFormat.format(parsedDate);
+            return dateFormatted;
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return dateStr;
+        }
+    }
+
+    private void generateChart(List<Entry> entries, List<String> dateList) {
+
+        chart = findViewById(R.id.lineChart);
+//      Sublist of last 7 days max
+        List<Entry> weekEntries;
+        List<String> weekDates;
+
+        if (entries.size() > 7) {
+            weekEntries = new ArrayList<Entry>(entries.subList(0,7));
+            weekDates = new ArrayList<String>(dateList.subList(0,7));
+        } else {
+            weekEntries = entries;
+            weekDates = dateList;
+        }
+
+        List<Entry> reversedWeekEntries = new ArrayList<Entry>();
+        List<String> reversedDateList = new ArrayList<String>();
+
+//      This is a pain - x values must be in increasing order
+//      Flip data so 7 days ago is at index 0 etc
+        for (int i=weekEntries.size()-1; i>=0; i--) {
+            reversedWeekEntries.add(new Entry((float) weekEntries.size() - (i+1), entries.get(i).getY()));
+        }
+//        Flip date data so 7 days ago is at index 0 etc
+        for (int i=weekDates.size()-1; i>=0; i--) {
+            reversedDateList.add(weekDates.get(i));
+        }
+
+        for(String s: reversedDateList)
+            System.out.println(s);
+
+        for(Entry e: reversedWeekEntries)
+            System.out.println(e.getX());
+
+
+
+//      Nested Value Formatter class
+        class DayAxisValueFormatter extends ValueFormatter {
+            private final BarLineChartBase<?> chart;
+            private List<String> dateList;
+
+//          Constructor
+            private DayAxisValueFormatter(BarLineChartBase<?> chart, List<String> dateList) {
+                this.chart = chart;
+                this.dateList = dateList;
+            }
+
+            @Override
+            public String getFormattedValue(float value) {
+                return dateList.get((int) value);
+            }
+        }
+
+
+//      Axes formatting
+        YAxis yAxisRight = chart.getAxisRight();
+        yAxisRight.setPosition(null);
+
+        ValueFormatter xAxisFormatter = new DayAxisValueFormatter(chart, reversedDateList);
+        XAxis xAxis = chart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setDrawGridLines(false);
+        xAxis.setGranularity(1f); // only intervals of 1 day
+//      Show 7 labels max
+        xAxis.setLabelCount(reversedWeekEntries.size());
+        xAxis.setValueFormatter(xAxisFormatter);
+
+
+        LineDataSet dataSet = new LineDataSet(reversedWeekEntries, "Daily total score");
+//        dataSet.setColor();
+
+
+        LineData lineData = new LineData(dataSet);
+        chart.setData(lineData);
+        chart.setDescription(null);
+//        Refresh chart
+        chart.invalidate();
     }
 
 
@@ -186,77 +378,4 @@ public class WellnessEntriesListActivity extends AppCompatActivity {
         wellnessEntryErrorTextView.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.GONE);
     }
-
-//    private void recyclerViewDisplay() {
-//        String white = Integer.toString(Color.parseColor("#ffffff"));
-//        String lightGreen = Integer.toString(Color.parseColor("#90ee90"));
-//        String red = Integer.toString(Color.parseColor("#CD0000"));
-//
-////        ArrayList<HashMap> data = new ArrayList<HashMap>();
-//
-//        HashMap<String, String> innerMap = new HashMap<String, String>();
-//
-//        innerMap.put("date", "Date");
-//        innerMap.put("sleep", "Sleep");
-//        innerMap.put("energy", "Energy");
-//        innerMap.put("soreness", "Soreness");
-//        innerMap.put("mood", "Mood");
-//        innerMap.put("stress", "Stress");
-//        innerMap.put("total", "Total");
-//        innerMap.put("color", white);
-//
-//        data.add(innerMap);
-//        innerMap = new HashMap<String, String>();
-//
-//        innerMap.put("date", "01-02-2010");
-//        innerMap.put("sleep", "4");
-//        innerMap.put("energy", "3");
-//        innerMap.put("soreness", "5");
-//        innerMap.put("mood", "1");
-//        innerMap.put("stress", "2");
-//        innerMap.put("total", "16");
-//        innerMap.put("color", red);
-//
-//        data.add(innerMap);
-//        innerMap = new HashMap<String, String>();
-//
-//        innerMap.put("date", "02-02-2010");
-//        innerMap.put("sleep", "4");
-//        innerMap.put("energy", "2");
-//        innerMap.put("soreness", "5");
-//        innerMap.put("mood", "5");
-//        innerMap.put("stress", "4");
-//        innerMap.put("total", "20");
-//        innerMap.put("color", lightGreen);
-//
-//        data.add(innerMap);
-//        data.add(innerMap);
-//        data.add(innerMap);
-//        data.add(innerMap);
-//        data.add(innerMap);
-//        data.add(innerMap);
-//        data.add(innerMap);
-//        data.add(innerMap);
-//        data.add(innerMap);
-//        data.add(innerMap);
-//        data.add(innerMap);
-//        data.add(innerMap);
-//        data.add(innerMap);
-//        data.add(innerMap);
-//        data.add(innerMap);
-//        data.add(innerMap);
-//        data.add(innerMap);
-//        data.add(innerMap);
-//        data.add(innerMap);
-//        data.add(innerMap);
-//        data.add(innerMap);
-//        data.add(innerMap);
-//        data.add(innerMap);
-//        data.add(innerMap);
-//
-//
-////        adapter = new MyAdapter(this, data);
-////        Dataset has updated, notify adapter to update recycler view
-//        adapter.notifyDataSetChanged();
-//    }
 }

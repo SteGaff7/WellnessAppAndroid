@@ -31,13 +31,21 @@
                 android:text="Wellness Entries"
                 android:textAlignment="center" />
 
-            <ImageView
-                android:id="@+id/imageView3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:paddingTop="32dp"
-                app:srcCompat="@drawable/ic_launcher_foreground" />
+<!--            <ImageView-->
+<!--                android:id="@+id/imageView3"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_weight="1"-->
+<!--                android:paddingTop="32dp"-->
+<!--                app:srcCompat="@drawable/ic_launcher_foreground" />-->
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/lineChart"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+
+                android:paddingTop="32dp" />
+            <!--                android:layout_weight="1"-->
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/myRecycleView"
