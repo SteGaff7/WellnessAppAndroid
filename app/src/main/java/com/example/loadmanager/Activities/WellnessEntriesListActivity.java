@@ -60,56 +60,14 @@ public class WellnessEntriesListActivity extends AppCompatActivity {
     LineChart chart;
     private MyAdapter mAdapter;
     private ArrayList<JSONObject> mAdapterData = new ArrayList<>();
-//    private ArrayList<String> dateList = new ArrayList<>();
+    private ArrayList<String> graphDateList = new ArrayList<>();
+    private ArrayList<Float> graphTotalScoreList = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wellness_entries_list);
-
-//        chart = findViewById(R.id.lineChart);
-//
-//        List<Entry> entries = new ArrayList<Entry>();
-//        for (int i=0; i<7; i++) {
-//            entries.add(new Entry(i, 7-i));
-//        }
-//
-//        dateList.add("01-01-2000");
-//        dateList.add("02-01-2000");
-//        dateList.add("03-01-2000");
-//        dateList.add("04-01-2000");
-//        dateList.add("05-01-2000");
-//        dateList.add("06-01-2000");
-//        dateList.add("07-01-2000");
-//
-//
-//        YAxis yAxisRight = chart.getAxisRight();
-//        yAxisRight.setPosition(null);
-//
-//
-//        ValueFormatter xAxisFormatter = new DayAxisValueFormatter(chart);
-//        XAxis xAxis = chart.getXAxis();
-//        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-//        xAxis.setDrawGridLines(false);
-//        xAxis.setGranularity(1f); // only intervals of 1 day
-//        xAxis.setLabelCount(7);
-//        xAxis.setValueFormatter(xAxisFormatter);
-//
-//
-//        LineDataSet dataSet = new LineDataSet(entries, "Weekly score");
-////        dataSet.setColor();
-//
-//
-//        LineData lineData = new LineData(dataSet);
-//        chart.setData(lineData);
-//        chart.setDescription(null);
-////        Refresh chart
-//        chart.invalidate();
-
-
-
-
-
 
 //        Initialize adapter with no data set
         mAdapter = new MyAdapter(getApplicationContext(), mAdapterData);
@@ -124,19 +82,6 @@ public class WellnessEntriesListActivity extends AppCompatActivity {
         getWellnessEntriesVolleyTask();
     }
 
-//    public class DayAxisValueFormatter extends ValueFormatter {
-//        private final BarLineChartBase<?> chart;
-//        public DayAxisValueFormatter(BarLineChartBase<?> chart) {
-//            this.chart = chart;
-//        }
-//        @Override
-//        public String getFormattedValue(float value) {
-//            return dateList.get((int) value);
-//        }
-//    }
-
-
-
     private void getWellnessEntriesVolleyTask() {
 
         SharedPreferences sharedPreferences = getSharedPreferences("UserPref", 0);
@@ -149,7 +94,6 @@ public class WellnessEntriesListActivity extends AppCompatActivity {
                 .path("wellness/")
 //                .appendQueryParameter("date", "2020-03-31")
                 .build();
-
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
 
@@ -170,13 +114,13 @@ public class WellnessEntriesListActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+//                      Handle empty graph adapter here
                         Log.i(TAG,"Error :" + error.toString());
                         Toast.makeText(WellnessEntriesListActivity.this, "This is an error message", Toast.LENGTH_SHORT).show();
 //                        Parse error and display text view and button
                         displayTextView();
                     }
                 }
-
                 )
         {
 //          Overwrite the headers
@@ -201,6 +145,7 @@ public class WellnessEntriesListActivity extends AppCompatActivity {
                     JSONArray jsonArray = new JSONArray(jsonString);
 
 //                  Parse on background thread
+//                    If doesn't return true do something..?
                     parseResponse(jsonArray);
 
 //                    Start a thread on main thread (Not needed)
@@ -223,14 +168,10 @@ public class WellnessEntriesListActivity extends AppCompatActivity {
     }
 
     /**
-     * Function that parses volley response object and updates adapter data
+     * Function that parses volley response object, updates adapter and graph data and generates graph
      * @param response
      */
     private boolean parseResponse(JSONArray response) throws JSONException {
-
-//      Chart data
-        ArrayList<String> dateList = new ArrayList<String>(response.length());
-        List<Entry> chartEntries = new ArrayList<Entry>(response.length());
 
 //      Clear adapter data set
         mAdapterData.clear();
@@ -257,24 +198,110 @@ public class WellnessEntriesListActivity extends AppCompatActivity {
 
 //          Add to chart data
             String dateStr = (String) wellnessEntry.get("date");
-            String formattedDate = formatDate(dateStr);
 
-            float total_score = (float) wellnessEntry.getInt("total_score");
+            float totalScore = (float) wellnessEntry.getInt("total_score");
 
-            dateList.add(formattedDate);
-            chartEntries.add(new Entry((float) i, total_score));
+            graphDateList.add(dateStr);
+            graphTotalScoreList.add(totalScore);
         }
 
-        for (String s : dateList) {
-            System.out.println(s);
-        }
-
-        for (Entry s : chartEntries) {
-            System.out.println(s.getX() + " - " + s.getY());
-        }
-
-        generateChart(chartEntries, dateList);
+        int number = 7;
+        populateChart(number, false);
         return true;
+    }
+
+    private void populateChart(int number, boolean days) {
+
+        List<Entry> dataEntriesList = new ArrayList<>();
+        List<String> dataDateList = new ArrayList<>();
+
+        chart = findViewById(R.id.lineChart);
+
+        if (days) {
+//          Use different function to get data lists
+            ;
+        } else {
+//          Call the method that will parse list appropriately for entries
+            List[] result = makeGraphData(number);
+            dataEntriesList = result[0];
+            dataDateList = result[1];
+        }
+
+        if (dataEntriesList.size() >= 2) {
+//      Axes formatting
+            YAxis yAxisRight = chart.getAxisRight();
+            yAxisRight.setPosition(null);
+
+            ValueFormatter xAxisFormatter = new DateAxisValueFormatter(chart, dataDateList);
+            XAxis xAxis = chart.getXAxis();
+            xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+            xAxis.setDrawGridLines(false);
+//          Intervals of 1
+            xAxis.setGranularity(1f);
+//          Show number of labels - Conditional sizing?
+            if (dataEntriesList.size() > 5 && dataEntriesList.size() <= 10) {
+//            xAxis.setLabelCount(5, true);
+                xAxis.setLabelCount(dataEntriesList.size());
+            } else {
+                xAxis.setLabelCount(dataEntriesList.size());
+            }
+            xAxis.setValueFormatter(xAxisFormatter);
+
+            String label = new String("Total Score");
+            LineDataSet dataSet = new LineDataSet(dataEntriesList, label);
+//          dataSet.setColor();
+
+            LineData lineData = new LineData(dataSet);
+            chart.setData(lineData);
+            chart.setDescription(null);
+        } else {
+            chart.setNoDataText("Not enough entries to show graph");
+
+        }
+//      Refresh chart
+        chart.invalidate();
+    }
+
+//  Value Formatter class
+    class DateAxisValueFormatter extends ValueFormatter {
+        private final BarLineChartBase<?> chart;
+        private List<String> dateList;
+
+//      Constructor
+        private DateAxisValueFormatter(BarLineChartBase<?> chart, List<String> dateList) {
+            this.chart = chart;
+            this.dateList = dateList;
+        }
+
+        @Override
+        public String getFormattedValue(float value) {
+            return formatDate(dateList.get((int) value));
+        }
+    }
+
+    private List[] makeGraphData(int numEntries) {
+        List[] result = new ArrayList[2];
+
+        if (numEntries > graphTotalScoreList.size()) {
+//          Or make the entries before null like it will be in the days format
+            numEntries = graphTotalScoreList.size();
+        }
+
+        List<String> dates = new ArrayList<>(graphDateList.subList(0, numEntries));
+        List<Float> scores = new ArrayList<>(graphTotalScoreList.subList(0, numEntries));
+        List<Entry> entries = new ArrayList<>();
+
+//      Reverse, chronologically ordered for graph
+        Collections.reverse(dates);
+        Collections.reverse(scores);
+
+        for (int i=0; i< scores.size(); i++) {
+            entries.add(new Entry(i, scores.get(i)));
+        }
+
+        result[0] = entries;
+        result[1] = dates;
+        return result;
     }
 
     private String formatDate(String dateStr) {
@@ -291,86 +318,6 @@ public class WellnessEntriesListActivity extends AppCompatActivity {
             return dateStr;
         }
     }
-
-    private void generateChart(List<Entry> entries, List<String> dateList) {
-
-        chart = findViewById(R.id.lineChart);
-//      Sublist of last 7 days max
-        List<Entry> weekEntries;
-        List<String> weekDates;
-
-        if (entries.size() > 7) {
-            weekEntries = new ArrayList<Entry>(entries.subList(0,7));
-            weekDates = new ArrayList<String>(dateList.subList(0,7));
-        } else {
-            weekEntries = entries;
-            weekDates = dateList;
-        }
-
-        List<Entry> reversedWeekEntries = new ArrayList<Entry>();
-        List<String> reversedDateList = new ArrayList<String>();
-
-//      This is a pain - x values must be in increasing order
-//      Flip data so 7 days ago is at index 0 etc
-        for (int i=weekEntries.size()-1; i>=0; i--) {
-            reversedWeekEntries.add(new Entry((float) weekEntries.size() - (i+1), entries.get(i).getY()));
-        }
-//        Flip date data so 7 days ago is at index 0 etc
-        for (int i=weekDates.size()-1; i>=0; i--) {
-            reversedDateList.add(weekDates.get(i));
-        }
-
-        for(String s: reversedDateList)
-            System.out.println(s);
-
-        for(Entry e: reversedWeekEntries)
-            System.out.println(e.getX());
-
-
-
-//      Nested Value Formatter class
-        class DayAxisValueFormatter extends ValueFormatter {
-            private final BarLineChartBase<?> chart;
-            private List<String> dateList;
-
-//          Constructor
-            private DayAxisValueFormatter(BarLineChartBase<?> chart, List<String> dateList) {
-                this.chart = chart;
-                this.dateList = dateList;
-            }
-
-            @Override
-            public String getFormattedValue(float value) {
-                return dateList.get((int) value);
-            }
-        }
-
-
-//      Axes formatting
-        YAxis yAxisRight = chart.getAxisRight();
-        yAxisRight.setPosition(null);
-
-        ValueFormatter xAxisFormatter = new DayAxisValueFormatter(chart, reversedDateList);
-        XAxis xAxis = chart.getXAxis();
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setDrawGridLines(false);
-        xAxis.setGranularity(1f); // only intervals of 1 day
-//      Show 7 labels max
-        xAxis.setLabelCount(reversedWeekEntries.size());
-        xAxis.setValueFormatter(xAxisFormatter);
-
-
-        LineDataSet dataSet = new LineDataSet(reversedWeekEntries, "Daily total score");
-//        dataSet.setColor();
-
-
-        LineData lineData = new LineData(dataSet);
-        chart.setData(lineData);
-        chart.setDescription(null);
-//        Refresh chart
-        chart.invalidate();
-    }
-
 
     private void displayTextView() {
 //      Add button to redirect to wellness page if no entry for today else problem so display a diff error
