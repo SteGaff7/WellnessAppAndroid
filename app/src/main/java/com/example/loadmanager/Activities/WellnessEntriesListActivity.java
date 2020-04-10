@@ -111,37 +111,49 @@ public class WellnessEntriesListActivity extends AppCompatActivity {
         sleepGraphButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                populateChart(7, false, "Sleep");
+                new Thread( new Runnable() { @Override public void run() {
+                    populateChart(7, false, "Sleep");
+                } } ).start();
             }
         });
         energyGraphButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                populateChart(7, false, "Energy");
+                new Thread( new Runnable() { @Override public void run() {
+                    populateChart(7, false, "Energy");
+                } } ).start();
             }
         });
         sorenessGraphButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                populateChart(7, false, "Soreness");
+                new Thread( new Runnable() { @Override public void run() {
+                    populateChart(7, false, "Soreness");
+                } } ).start();
             }
         });
         moodGraphButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                populateChart(7, false, "Mood");
+                new Thread( new Runnable() { @Override public void run() {
+                    populateChart(7, false, "Mood");
+                } } ).start();
             }
         });
         stressGraphButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                populateChart(7, false, "Stress");
+                new Thread( new Runnable() { @Override public void run() {
+                    populateChart(7, false, "Stress");
+                } } ).start();
             }
         });
         totalGraphButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                populateChart(7, false, "Total");
+                new Thread( new Runnable() { @Override public void run() {
+                    populateChart(7, false, "Total");
+                } } ).start();
             }
         });
     }
