@@ -1,6 +1,7 @@
 package com.example.loadmanager.TestActivites;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -10,6 +11,7 @@ import android.util.JsonReader;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +24,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.loadmanager.R;
+import com.example.loadmanager.Fragments.CustomDF;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -56,10 +59,80 @@ public class APITestingActivity extends AppCompatActivity {
     private static final String TAG = APITestingActivity.class.getName();
     SharedPreferences sharedPreferences;
 
+    NumberPicker picker1;
+    NumberPicker picker2;
+
+    Button plusButton;
+    Button minusButton;
+
+    Button buttonDF;
+
+    TextView numberText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_apitesting);
+
+        final FragmentManager fm = getSupportFragmentManager();
+
+        buttonDF = findViewById(R.id.buttonDF);
+        buttonDF.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CustomDF dFragment = new CustomDF(0, new HashMap<String, String>());
+                dFragment.show(fm, "Custom Dialog Fragment");
+            }
+        });
+
+
+        plusButton = findViewById(R.id.plusButton);
+        minusButton = findViewById(R.id.minusButton);
+
+        numberText = findViewById(R.id.numberText);
+
+        numberText.setText("3");
+
+        plusButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int value;
+                String strValue = (String) numberText.getText();
+                value = Integer.parseInt(strValue);
+
+                if (!(value >= 5)) {
+                    value++;
+                    numberText.setText(Integer.toString(value));
+                } else {
+                    Toast.makeText(getApplicationContext(), "Cannot increment", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        minusButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int value;
+                String strValue = (String) numberText.getText();
+                value = Integer.parseInt(strValue);
+
+                if (!(value <= 1)) {
+                    value--;
+                    numberText.setText(Integer.toString(value));
+                } else {
+                    Toast.makeText(getApplicationContext(), "Cannot decrement", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+
+
+        picker1 = findViewById(R.id.picker1);
+        picker2 = findViewById(R.id.picker2);
+
+        picker1.setMaxValue(5);
+        picker1.setMinValue(1);
+        picker1.setWrapSelectorWheel(false);
 
         sharedPreferences = getSharedPreferences("UserPref", 0);
 

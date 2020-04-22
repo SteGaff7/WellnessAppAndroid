@@ -2,7 +2,7 @@ package com.example.loadmanager.Adapters;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,12 +12,13 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.loadmanager.Activities.WellnessEntriesListActivity;
+import com.example.loadmanager.Fragments.CustomDF;
 import com.example.loadmanager.R;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -28,17 +29,22 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
+public class WellnessEntriesAdapter extends RecyclerView.Adapter<WellnessEntriesAdapter.ViewHolder> implements CustomDF.Listener {
 
     private ArrayList<JSONObject> mData;
     private LayoutInflater mInflater;
-//    private ItemClickListener mCLickListener;
+    private FragmentManager fm;
+    //    private ItemClickListener mCLickListener;
+
+    private static final String TAG = WellnessEntriesAdapter.class.getName();
 
 //    Pass data to constructor and give context
-    public MyAdapter(Context context, ArrayList<JSONObject> data) {
+    public WellnessEntriesAdapter(Context context, ArrayList<JSONObject> data, FragmentManager fm) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
+        this.fm = fm;
     }
 
 //    Inflate row layout from xml when needed
@@ -91,9 +97,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                 try {
                     if (entry.has("comments")) {
                         comments = (String) entry.get("comments");
+                        Log.d("COMM", comments);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
+                    Log.d("COMM", e.toString());
                 }
 
 //              Format date
@@ -143,7 +151,26 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     }
 
 
-//    Inner class that stores and recycles views as they are scrolled off screen
+    @Override
+    public void returnData(HashMap<String, Object> result) {
+//      Parse response from DF, update mData and then notify data set changed
+//        Log.d("RETURN", String.valueOf(result));
+
+        int pos = (int) result.get("position");
+        JSONObject entry = mData.get(pos);
+
+        for (String key : result.keySet()) {
+            try {
+                entry.put(key, result.get(key));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        notifyDataSetChanged();
+    }
+
+
+    //    Inner class that stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView dateTextView;
         TextView sleepTextView;
@@ -173,8 +200,31 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         public void onClick(View view) {
 //            if (mCLickListener != null) mCLickListener.onItemClick(view, getAdapterPosition());
             int pos = getLayoutPosition();
-            Toast.makeText(view.getContext(), "Position" + pos, Toast.LENGTH_SHORT).show();
+
+            HashMap<String, String> entryData = new HashMap<>();
+//            entryData.put("position", pos + "" );
+            entryData.put("date", dateTextView.getText().toString());
+            entryData.put("sleep_score", sleepTextView.getText().toString());
+            entryData.put("energy_score", energyTextView.getText().toString());
+            entryData.put("soreness_score", sorenessTextView.getText().toString());
+            entryData.put("mood_score", moodTextView.getText().toString());
+            entryData.put("stress_score", stressTextView.getText().toString());
+//            entryData.put("total_score", totalTextView.getText().toString());
+
+            String comments = "";
+            try {
+                comments = (String) (mData.get(pos)).get("comments");
+            } catch (JSONException | ClassCastException e) {
+                e.printStackTrace();
+            }
+
+            entryData.put("comments", comments);
+
+//          Populate DF with data from each item
+            CustomDF dFragment = new CustomDF(pos, entryData);
+            dFragment.setListener(WellnessEntriesAdapter.this);
+            dFragment.show(fm, "Edit Wellness Entry Dialog Fragment");
         }
-}
+    }
 
 }

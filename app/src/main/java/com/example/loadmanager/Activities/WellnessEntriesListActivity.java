@@ -2,16 +2,14 @@ package com.example.loadmanager.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -28,7 +26,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.loadmanager.Adapters.MyAdapter;
+import com.example.loadmanager.Adapters.WellnessEntriesAdapter;
 import com.example.loadmanager.R;
 import com.github.mikephil.charting.charts.BarLineChartBase;
 import com.github.mikephil.charting.charts.LineChart;
@@ -42,7 +40,6 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONTokener;
 
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
@@ -70,7 +67,7 @@ public class WellnessEntriesListActivity extends AppCompatActivity {
     Button stressGraphButton;
     Button totalGraphButton;
 
-    private MyAdapter mAdapter;
+    private WellnessEntriesAdapter mAdapter;
     private ArrayList<JSONObject> mAdapterData = new ArrayList<>();
     private List<String> graphDateList = new ArrayList<>();
     private List<Float> graphSleepScoreList = new ArrayList<>();
@@ -96,8 +93,11 @@ public class WellnessEntriesListActivity extends AppCompatActivity {
         stressGraphButton = findViewById(R.id.stressGraphButton);
         totalGraphButton = findViewById(R.id.totalGraphButton);
 
+//      Ok to pass in to constructor I think
+        final FragmentManager fm = getSupportFragmentManager();
+
 //      Initialize adapter with no data set
-        mAdapter = new MyAdapter(getApplicationContext(), mAdapterData);
+        mAdapter = new WellnessEntriesAdapter(getApplicationContext(), mAdapterData, fm);
 
         recyclerView = findViewById(R.id.myRecycleView);
 //      Set empty adapter
