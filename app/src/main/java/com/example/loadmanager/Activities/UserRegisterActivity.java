@@ -90,7 +90,7 @@ public class UserRegisterActivity extends AppCompatActivity {
 
     private void registerUserVolleyTask(final String username, final String email, final String password) {
 //        Change to match new views
-        String url = "http://192.168.0.165:8000/users/register/";
+        String url = "http://192.168.0.164:8000/users/register/";
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         JSONObject requestObj = new JSONObject();
 

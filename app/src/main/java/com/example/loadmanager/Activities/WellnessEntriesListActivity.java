@@ -166,7 +166,7 @@ public class WellnessEntriesListActivity extends AppCompatActivity {
         //      Use uri builder to customize GET requests
         Uri uri = new Uri.Builder()
                 .scheme("http")
-                .encodedAuthority("192.168.0.165:8000")
+                .encodedAuthority("192.168.0.164:8000")
                 .path("wellness/")
 //                .appendQueryParameter("date", "2020-03-31")
                 .build();
