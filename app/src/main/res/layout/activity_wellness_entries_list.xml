@@ -31,13 +31,86 @@
                 android:text="Wellness Entries"
                 android:textAlignment="center" />
 
-            <ImageView
-                android:id="@+id/imageView3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:paddingTop="32dp"
-                app:srcCompat="@drawable/ic_launcher_foreground" />
+<!--            <ImageView-->
+<!--                android:id="@+id/imageView3"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_weight="1"-->
+<!--                android:paddingTop="32dp"-->
+<!--                app:srcCompat="@drawable/ic_launcher_foreground" />-->
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/lineChart"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+
+                android:paddingTop="32dp">
+
+            </com.github.mikephil.charting.charts.LineChart>
+
+            <LinearLayout
+                android:id="@+id/graphButtonBar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <Button
+                    android:id="@+id/sleepGraphButton"
+                    style="@android:style/Widget.Material.Light.Button.Borderless.Colored"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:text="@string/sleep"
+                    android:textSize="8sp" />
+
+                <Button
+                    android:id="@+id/energyGraphButton"
+                    style="@android:style/Widget.Material.Light.Button.Borderless.Colored"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:text="@string/energy"
+                    android:textSize="8sp" />
+
+                <Button
+                    android:id="@+id/sorenessGraphButton"
+                    style="@android:style/Widget.Material.Light.Button.Borderless.Colored"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:text="@string/soreness"
+                    android:textSize="8sp" />
+
+                <Button
+                    android:id="@+id/moodGraphButton"
+                    style="@android:style/Widget.Material.Light.Button.Borderless.Colored"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:text="@string/mood"
+                    android:textSize="8sp" />
+
+                <Button
+                    android:id="@+id/stressGraphButton"
+                    style="@android:style/Widget.Material.Light.Button.Borderless.Colored"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:text="@string/stress"
+                    android:textSize="8sp" />
+
+                <Button
+                    android:id="@+id/totalGraphButton"
+                    style="@android:style/Widget.Material.Light.Button.Borderless.Colored"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:text="Total"
+                    android:textSize="8sp" />
+            </LinearLayout>
+
+            <!--                android:layout_weight="1"-->
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/myRecycleView"
